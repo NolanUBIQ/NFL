@@ -95,11 +95,16 @@ class QBModel:
         prev_season_team_avg = self.get_prev_season_team_avg(season, team)
         prev_season_league_avg = self.get_prev_season_league_avg(season)
 
+
+
         val = min(
             self.config['rookie_draft_intercept'] + self.config['rookie_draft_slope'] * math.log(draft_number) +
-            ((1 - self.config['rookie_league_reg']) * prev_season_team_avg + self.config['rookie_league_reg'] * prev_season_league_avg),
+            (((1 - self.config['rookie_league_reg']) * prev_season_team_avg +
+              self.config['rookie_league_reg'] * prev_season_league_avg) * (1 + self.config['rookie_league_cap'])),
             (1 + self.config['rookie_league_cap']) * prev_season_league_avg
         )
+
+
         self.qbs[qb_id] = {
             'current_value': val,
             'current_variance': val,
@@ -163,10 +168,7 @@ class QBModel:
 
             self.update_team_off_value(row['team'], def_adj_perf)
 
-            # if row["game_id"]=='2024_20_WAS_DET':
-            #     print(f"player_VALUE is {row['player_VALUE']}")
-            #     print(f"def_val is {def_val}")
-            #     print(f"weather_adj is {weather_adj}")
+
 
 
 
